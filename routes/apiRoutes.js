@@ -6,12 +6,12 @@ const router = express.Router();
 const notesStore = require('../db/db.json');
 
 // GET request to retrieve all notes
-router.get('/notes', (req, res) => {
+router.get('/api/notes', (req, res) => {
   res.json(notesStore);
 });
 
 // POST request to add a new note
-router.post('/notes', (req, res) => {
+router.post('/api/notes', (req, res) => {
     const newNote = {
       id: Date.now(),
       title: req.body.title,
@@ -34,7 +34,7 @@ router.post('/notes', (req, res) => {
   });  
 
 // DELETE request to delete a note by id
-router.delete('/notes/:id', (req, res) => {
+router.delete('/api/notes/:id', (req, res) => {
   const noteId = parseInt(req.params.id);
   const filteredNotes = notesStore.filter((note) => note.id !== noteId);
 

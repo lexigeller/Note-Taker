@@ -25,19 +25,6 @@ router.get('/notes', (req, res) => {
                 res.status(500).json(err)
             })
     })
-  
-    // Generate a unique id for the new note
-    const newNote = req.body;
-    newNote.id = Date.now();
-  
-    // Add the new note to the existing notes
-    notes.push(newNote);
-  
-    // Write the updated notes to the 'db.json' file
-    fs.writeFileSync(path.join(__dirname, 'db.json'), JSON.stringify(notes));
-  
-    // Send the new note as the response
-    res.json(newNote);
 
     // DELETE request to delete a note by id
 app.delete('/api/notes/:id', (req, res) => {

@@ -1,9 +1,9 @@
-/*const router = require('express').Router();
+const router = require('express').Router();
 const notes = require('../db')
 
 router.use(notes);
 
-module.exports = router;*/
+module.exports = router;
 
 // GET request to retrieve all notes
 app.get('/api/notes', (req, res) => {

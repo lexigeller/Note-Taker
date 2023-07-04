@@ -1,8 +1,6 @@
 const router = require('express').Router();
 const notesStore = require('../db/db.json')
 
-module.exports = router;
-
 // GET request to retrieve all notes
 router.get('/notes', (req, res) => {
     notesStore
@@ -63,3 +61,5 @@ app.delete('/api/notes/:id', (req, res) => {
       res.status(404).json({ error: 'Note not found' });
     }
   });
+
+module.exports = router;

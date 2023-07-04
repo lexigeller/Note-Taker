@@ -12,17 +12,26 @@ router.get('/notes', (req, res) => {
 
 // POST request to add a new note
 router.post('/notes', (req, res) => {
-  const newNote = req.body;
-  newNote.id = notesStore.length + 1;
-  notesStore.push(newNote);
-
-  fs.writeFileSync(
-    path.join(__dirname, '../db/db.json'),
-    JSON.stringify(notesStore)
-  );
-
-  res.json(newNote);
-});
+    const newNote = {
+      id: Date.now(),
+      title: req.body.title,
+      text: req.body.text
+    };
+  
+    notesStore.push(newNote); // Add the new note to the notesStore array
+  
+    fs.writeFile(
+      path.join(__dirname, '../db/db.json'),
+      JSON.stringify(notesStore),
+      (err) => {
+        if (err) {
+          res.status(500).json(err);
+        } else {
+          res.json(newNote);
+        }
+      }
+    );
+  });  
 
 // DELETE request to delete a note by id
 router.delete('/notes/:id', (req, res) => {

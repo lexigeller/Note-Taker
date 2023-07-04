@@ -1,52 +1,44 @@
-const router = require('express').Router();
-const notesStore = require('../db/db.json')
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+
+const router = express.Router();
+const notesStore = require('../db/db.json');
 
 // GET request to retrieve all notes
 router.get('/notes', (req, res) => {
-    notesStore
-        .getNotes()
-        .then(notes => {
-            res.json(notes)
-        })
-        .catch(err => {
-            res.status(500).json(err)
-        })
-})
-  
-  // POST request to add a new note
-  router.post('/notes', (req, res) => {
-        console.log(req.body)
-        notesStore
-            .addNote(req.body)
-            .then(note => {
-                res.json(note)
-            })
-            .catch(err => {
-                res.status(500).json(err)
-            })
-    })
+  res.json(notesStore);
+});
 
-    // DELETE request to delete a note by id
-app.delete('/api/notes/:id', (req, res) => {
-    // Read the 'db.json' file to get the existing notes
-    const notes = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json'), 'utf-8'));
-  
-    // Find the index of the note with the given id
-    const noteIndex = notes.findIndex((note) => note.id === parseInt(req.params.id));
-  
-    if (noteIndex !== -1) {
-      // Remove the note from the notes array
-      const deletedNote = notes.splice(noteIndex, 1)[0];
-  
-      // Write the updated notes to the 'db.json' file
-      fs.writeFileSync(path.join(__dirname, 'db.json'), JSON.stringify(notes));
-  
-      // Send the deleted note as the response
-      res.json(deletedNote);
-    } else {
-      // If the note with the given id is not found, send a 404 status code
-      res.status(404).json({ error: 'Note not found' });
-    }
-  });
+// POST request to add a new note
+router.post('/notes', (req, res) => {
+  const newNote = req.body;
+  newNote.id = notesStore.length + 1;
+  notesStore.push(newNote);
+
+  fs.writeFileSync(
+    path.join(__dirname, '../db/db.json'),
+    JSON.stringify(notesStore)
+  );
+
+  res.json(newNote);
+});
+
+// DELETE request to delete a note by id
+router.delete('/notes/:id', (req, res) => {
+  const noteId = parseInt(req.params.id);
+  const filteredNotes = notesStore.filter((note) => note.id !== noteId);
+
+  if (filteredNotes.length < notesStore.length) {
+    fs.writeFileSync(
+      path.join(__dirname, '../db/db.json'),
+      JSON.stringify(filteredNotes)
+    );
+
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: 'Note not found' });
+  }
+});
 
 module.exports = router;

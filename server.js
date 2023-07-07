@@ -7,6 +7,9 @@ const htmlRoutes = require('./routes/htmlRoutes');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Serve static files
+app.use(express.static('public'));
+
 // Middleware for parsing JSON and urlencoded form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
